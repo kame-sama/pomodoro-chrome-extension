@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Pomodoro",
+  "description": "Simple Pomodoro timer that helps you focus on any task",
+  "version": "1.0",
+  "permissions": ["alarms", "notifications", "storage", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}
