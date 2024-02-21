@@ -6,6 +6,7 @@ import manifest from './manifest.json';
 export default defineConfig({
   plugins: [crx({ manifest })],
   build: {
+    target: 'esnext',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
