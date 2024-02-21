@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+  </head>
+  <body>
+    <main class="main">
+      <section class="section">
+        <h1>Timer</h1>
+        <div class="time">
+          <h2>Time (minutes):</h2>
+          <hr />
+          <div class="grid">
+            <div class="grid-item">
+              <label for="pomodoro">Pomodoro</label>
+              <input
+                type="number"
+                name="pomodoro"
+                id="pomodoro"
+                autocomplete="off"
+                min="0"
+                step="0.1"
+              />
+            </div>
+            <div class="grid-item">
+              <label for="short-break">Short Break</label>
+              <input
+                type="number"
+                name="short-break"
+                id="short-break"
+                autocomplete="off"
+                min="0"
+                step="0.1"
+              />
+            </div>
+            <div class="grid-item">
+              <label for="long-break">Long Break</label>
+              <input
+                type="number"
+                name="long-break"
+                id="long-break"
+                autocomplete="off"
+                min="0"
+                step="0.1"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="behavior">
+          <h2>Behavior:</h2>
+          <hr />
+          <div class="grid">
+            <div class="grid-item">
+              <label for="auto-start-breaks">Auto Start Breaks</label>
+              <input
+                type="checkbox"
+                name="auto-start-breaks"
+                id="auto-start-breaks"
+              />
+            </div>
+            <div class="grid-item">
+              <label for="auto-start-pomodoros">Auto Start Pomodoros</label>
+              <input
+                type="checkbox"
+                name="auto-start-pomodoros"
+                id="auto-start-pomodoros"
+              />
+            </div>
+            <div class="grid-item">
+              <label for="long-break-interval">Long Break Interval</label>
+              <input
+                type="number"
+                name="long-break-interval"
+                id="long-break-interval"
+                autocomplete="off"
+                min="1"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <h1>Blocker</h1>
+        <div class="blocker">
+          <h2>Add target:</h2>
+          <hr />
+          <div class="grid">
+            <div class="grid-item">
+              <label for="address">Address</label>
+            </div>
+            <div class="grid-item">
+              <input
+                type="text"
+                name="address"
+                id="address"
+                autocomplete="off"
+                placeholder="www.youtube.com"
+              />
+            </div>
+            <div class="grid-item">
+              <button id="add-target" class="button">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="block-list">
+          <h2>Block list:</h2>
+          <hr />
+          <ul></ul>
+        </div>
+      </section>
+      <div class="grid-item">
+        <button id="save">Save changes</button>
+        <button id="reset">Reset to default</button>
+      </div>
+    </main>
+    <script type="module" src="./settings.js"></script>
+  </body>
+</html>

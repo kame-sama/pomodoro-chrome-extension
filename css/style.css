@@ -1,0 +1,87 @@
+:root {
+  box-sizing: border-box;
+  font-size: 16px;
+  --background-color: tomato;
+  --foreground-color: cornsilk;
+  --active-color: brown;
+}
+
+:root.blue-theme {
+  --background-color: steelblue;
+  --active-color: navy;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.icon {
+  width: 24px;
+}
+
+body {
+  width: 250px;
+  padding: 0.75rem;
+  background: var(--background-color);
+  color: var(--foreground-color);
+  display: grid;
+  gap: 1rem;
+}
+
+#statusBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+#statusBar > * {
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.active {
+  background: var(--active-color);
+}
+
+#timer,
+#counter {
+  text-align: center;
+  font-weight: bold;
+}
+
+#timer {
+  font-size: 5.5rem;
+}
+
+#counter {
+  font-size: 1rem;
+}
+
+#controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+}
+
+#controls > *:hover {
+  cursor: pointer;
+}
+
+#toggleTimer {
+  width: 100%;
+  border: 0;
+  background: var(--foreground-color);
+  color: var(--active-color);
+  font-weight: bold;
+  border-radius: 0.25rem;
+}

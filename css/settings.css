@@ -1,0 +1,176 @@
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.85rem;
+}
+
+h3 {
+  font-size: 1.65rem;
+}
+
+h4 {
+  font-size: 1.45rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+li {
+  font-size: 1rem;
+}
+
+li + li {
+  margin-top: 0.5rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  background: tomato;
+  color: cornsilk;
+}
+
+.main {
+  max-width: 683px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+}
+
+.main,
+.section {
+  display: grid;
+  gap: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.grid-item {
+  display: grid;
+  gap: 0.5rem;
+}
+
+label {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  justify-self: center;
+}
+
+input[type='number'] {
+  font: inherit;
+  font-size: 1rem;
+  width: 5rem;
+  padding: 0.25rem 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  justify-self: center;
+  color: darkred;
+}
+
+input[type='text'] {
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  width: 100%;
+  color: darkred;
+}
+
+hr {
+  height: 0.25rem;
+  background: cornsilk;
+  border: 0;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.button {
+  font: inherit;
+  font-size: 1rem;
+  width: 5rem;
+  padding: 0.25rem 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  justify-self: center;
+  background: cornsilk;
+  color: darkred;
+}
+
+#save {
+  justify-self: center;
+  padding: 0.25rem 2.25rem;
+  border: 0;
+  border-radius: 0.25rem;
+  font-family: inherit;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: bold;
+  background: cornsilk;
+  color: darkred;
+}
+
+#reset {
+  color: cornsilk;
+  background: transparent;
+  border: 0;
+  justify-self: center;
+}
+
+#reset:hover {
+  text-decoration: underline;
+}
+
+.block-list li div:nth-child(2) {
+  justify-self: start;
+}

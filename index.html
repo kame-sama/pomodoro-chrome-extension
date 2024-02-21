@@ -2,12 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Pomodoro</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+    <div id="statusBar">
+      <div id="pomodoro">Pomodoro</div>
+      <div id="shortBreak">Short Break</div>
+      <div id="longBreak">Long Break</div>
+    </div>
+    <div id="timer"></div>
+    <div id="counter"></div>
+    <div id="controls">
+      <div id="settings" class="icon">
+        <img src="/cog.svg" alt="Settings Icon" />
+      </div>
+      <button id="toggleTimer"></button>
+      <div id="skip" class="icon">
+        <img src="/skip-forward.svg" alt="Skip Icon" />
+      </div>
+    </div>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
