@@ -7,15 +7,15 @@ chrome.runtime.onInstalled.addListener((_reason) => {
 });
 
 chrome.alarms.onAlarm.addListener(async (event) => {
-  let { count, status } = await chrome.storage.session.get('count', 'status');
-  const settings = await chrome.storage.sync.get(
+  let { count, status } = await chrome.storage.session.get(['count', 'status']);
+  const settings = await chrome.storage.sync.get([
     'pomodoro',
     'shortBreak',
     'longBreak',
     'autoStartBreaks',
     'autoStartPomodoros',
-    'longBreakInterval'
-  );
+    'longBreakInterval',
+  ]);
 
   if (event.name === 'pomodoro') {
     status = count % settings.longBreakInterval ? 'shortBreak' : 'longBreak';

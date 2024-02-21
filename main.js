@@ -12,7 +12,7 @@ if (!status) {
 
 if (!count) {
   count = 1;
-  chrome.storage.session.set({ status });
+  chrome.storage.session.set({ count });
 }
 
 if (!timeLeft) {
