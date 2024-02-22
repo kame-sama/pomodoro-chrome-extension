@@ -29,7 +29,7 @@ const settings = await chrome.storage.sync.get([
   'longBreakInterval',
 ]);
 const DOMController = popupDOMController();
-let alarm = await chrome.alarms.get(status);
+const alarm = await chrome.alarms.get(status);
 let intervalId;
 
 const updateSession = (oldStatus) => {
