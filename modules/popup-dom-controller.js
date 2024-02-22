@@ -1,5 +1,8 @@
 import formatTime from './format-time';
-
+/**
+ * Factory for extension popup DOM controller
+ * @return {object} - different methods for DOM manipulations
+ */
 export default function popupDOMController() {
   const root = document.querySelector(':root');
   const statusBarDivs = document.querySelectorAll('#statusBar > *');
