@@ -15,9 +15,18 @@ chrome.alarms.onAlarm.addListener(async (event) => {
     'autoStartBreaks',
     'autoStartPomodoros',
     'longBreakInterval',
+    'tasks',
+    'currentTaskId',
   ]);
 
   if (event.name === 'pomodoro') {
+    if (
+      settings.tasks.length &&
+      settings.currentTaskId < settings.tasks.length
+    ) {
+      settings.tasks[settings.currentTaskId].pomodoros++;
+      chrome.storage.sync.set({ tasks: settings.tasks });
+    }
     status = count % settings.longBreakInterval ? 'shortBreak' : 'longBreak';
     chrome.action.setIcon({ path: iconBlueUrl });
   } else {

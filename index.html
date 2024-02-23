@@ -22,6 +22,42 @@
         <img src="/skip-forward.svg" alt="Skip Icon" />
       </div>
     </div>
+    <div id="tasks">
+      <div class="tasks-header">
+        <div>Tasks</div>
+        <div id="tasksMenu">
+          <div id="toggleTaskMenu" class="icon">
+            <img
+              src="/dots-vertical-circle-outline.svg"
+              alt="Three Dots Icon"
+            />
+          </div>
+          <ul id="taskMenuList">
+            <li id="clearFinishedTasks">
+              Clear finished tasks
+              <div class="icon">
+                <img src="/trash-can.svg" alt="Trash Can" />
+              </div>
+            </li>
+            <li id="clearAllTasks">
+              Clear all tasks
+              <div class="icon">
+                <img src="/trash-can.svg" alt="Trash Can" />
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <ul id="taskList"></ul>
+      <div class="new-task-menu">
+        <button id="addTask">
+          <div class="icon">
+            <img src="/plus-circle-outline.svg" alt="Plus Circle Icon" />
+          </div>
+          <div>Add Task</div>
+        </button>
+      </div>
+    </div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

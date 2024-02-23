@@ -19,6 +19,10 @@
   padding: 0;
 }
 
+ul {
+  list-style-type: none;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -26,6 +30,10 @@ img {
 
 .icon {
   width: 24px;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 body {
@@ -84,4 +92,185 @@ body {
   color: var(--active-color);
   font-weight: bold;
   border-radius: 0.25rem;
+}
+
+#tasks {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-height: min-content;
+  padding: 0.2rem;
+  border-bottom: solid 0.15rem cornsilk;
+  font-size: 0.875rem;
+  font-weight: bold;
+  overflow-y: visible;
+  position: relative;
+}
+
+#toggleTaskMenu:hover {
+  cursor: pointer;
+}
+
+#taskMenuList {
+  position: absolute;
+  right: 1.25rem;
+  top: -4rem;
+  background: cornsilk;
+  color: brown;
+  display: grid;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  height: 0;
+  width: 0;
+}
+
+#taskMenuList.open {
+  height: max-content;
+  width: max-content;
+  border: solid 1px var(--active-color);
+}
+
+#taskMenuList > * {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: normal;
+
+  padding: 0.15rem 0.5rem;
+}
+
+#taskMenuList > *:hover {
+  cursor: pointer;
+  background: tan;
+}
+
+#taskMenuList > li + li {
+  border-top: 1px solid var(--active-color);
+}
+
+#addTask {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  border: 0;
+  background: var(--foreground-color);
+  color: var(--active-color);
+  font-weight: bold;
+  border-radius: 0.25rem;
+}
+
+img {
+  pointer-events: none;
+}
+
+#addTask * {
+  pointer-events: none;
+}
+
+#addTask:hover {
+  cursor: pointer;
+}
+
+.task-form {
+  color: var(--active-color);
+  background: var(--foreground-color);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.25rem;
+  font-weight: bold;
+}
+
+input {
+  border: 2px solid var(--active-color);
+  padding: 0.15rem 0.25rem;
+  border-radius: 0.25rem;
+  appearance: none;
+  color: var(--active-color);
+  font-weight: bold;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+input:focus {
+  outline: none;
+}
+
+.est-pomodoros {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#estPomodoros {
+  width: 2rem;
+  text-align: right;
+}
+
+.footer {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 2px solid var(--active-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+#taskFormCancel {
+  border: 0;
+  background: none;
+  color: var(--active-color);
+}
+#taskFormSubmit {
+  border: 0;
+  background: var(--active-color);
+  color: var(--foreground-color);
+  font-weight: bold;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+#taskList {
+  padding: 0.2rem;
+}
+
+#taskList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  background: #ffffff50;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+}
+
+#taskList > li + li {
+  margin-top: 0.5rem;
+}
+
+#taskList li:has(> input:checked) {
+  text-decoration: line-through;
+}
+
+input[type='checkbox'] {
+  border: 0;
+  content: url(/plus-circle-outline.svg);
+  width: 24px;
+  padding: 0;
+}
+
+input[type='checkbox']:checked {
+  content: url(/trash-can.svg);
 }
