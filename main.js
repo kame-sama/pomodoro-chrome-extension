@@ -1,102 +1,65 @@
 import './css/style.css';
-import getTimeLeft from './modules/get-time-left';
-import popupDOMController from './modules/popup-dom-controller';
+import * as DOMController from './modules/dom_modules/barrel';
+import getTimeLeft from './modules/helpers/get-time-left';
+import updateSession from './modules/helpers/update-session';
 import iconBlueUrl from '/icon-16-blue.png';
 
-let { status, count, timeLeft } = await chrome.storage.session.get();
+let {
+  status = 'pomodoro',
+  count = 1,
+  timeLeft = 0,
+} = await chrome.storage.session.get();
 
-if (!status) {
-  status = 'pomodoro';
-  chrome.storage.session.set({ status });
-}
+let {
+  tasks = [],
+  currentTaskId = 0,
+  ...settings
+} = await chrome.storage.sync.get();
 
-if (!count) {
-  count = 1;
-  chrome.storage.session.set({ count });
-}
-
-if (!timeLeft) {
-  timeLeft = 0;
-  chrome.storage.session.set({ timeLeft });
-}
-
-let { tasks } = await chrome.storage.sync.get('tasks');
-
-if (!tasks) {
-  tasks = [];
-}
-
-const settings = await chrome.storage.sync.get([
-  'pomodoro',
-  'shortBreak',
-  'longBreak',
-  'autoStartBreaks',
-  'autoStartPomodoros',
-  'longBreakInterval',
-]);
-const DOMController = popupDOMController();
 const alarm = await chrome.alarms.get(status);
-let { currentTaskId } = await chrome.storage.sync.get('currentTaskId');
-
-if (!currentTaskId) {
-  currentTaskId = 0;
-  chrome.storage.sync.set({ currentTaskId });
-}
-
 let intervalId;
+let formControls;
 
-const updateSession = (oldStatus) => {
-  if (oldStatus === 'pomodoro') {
-    status = count % settings.longBreakInterval ? 'shortBreak' : 'longBreak';
-  } else {
-    count++;
-    status = 'pomodoro';
-  }
-  timeLeft = 0;
-};
+chrome.storage.session.set({ status, count, timeLeft });
+chrome.storage.sync.set({ tasks, currentTaskId });
 
 DOMController.updateStatus(status);
 DOMController.updateCounter(count);
 DOMController.updateTheme(status);
-DOMController.updateTaskList(tasks);
+DOMController.printTasks(tasks);
+DOMController.printAddTaskButton();
 
 if (!alarm && !timeLeft) {
   DOMController.updateTimer(parseInt(settings[status]) * 60);
-}
-
-if (!alarm && timeLeft) {
+} else if (!alarm && timeLeft) {
   DOMController.updateTimer(timeLeft);
-}
-
-if (alarm) {
-  DOMController.toggleButtonText('Pause');
+} else {
+  DOMController.updateTogglerText('Pause');
   DOMController.updateTimer(await getTimeLeft());
   intervalId = setInterval(async () => {
     DOMController.updateTimer(await getTimeLeft());
   }, 1000);
 }
 
-document
-  .querySelector('#toggleTimer')
-  .addEventListener('click', async (event) => {
-    if (event.target.textContent === 'Start') {
-      if (!timeLeft)
-        chrome.alarms.create(status, {
-          delayInMinutes: parseFloat(settings[status]),
-        });
-      else chrome.alarms.create(status, { delayInMinutes: timeLeft / 60 });
+document.querySelector('#toggler').addEventListener('click', async (event) => {
+  if (event.target.textContent === 'Start') {
+    if (!timeLeft)
+      chrome.alarms.create(status, {
+        delayInMinutes: parseFloat(settings[status]),
+      });
+    else chrome.alarms.create(status, { delayInMinutes: timeLeft / 60 });
 
-      intervalId = setInterval(async () => {
-        DOMController.updateTimer(await getTimeLeft());
-      }, 1000);
-    } else {
-      timeLeft = await getTimeLeft();
-      chrome.storage.session.set({ timeLeft });
-      chrome.alarms.clearAll();
-      clearInterval(intervalId);
-    }
-    DOMController.toggleButtonText();
-  });
+    intervalId = setInterval(async () => {
+      DOMController.updateTimer(await getTimeLeft());
+    }, 1000);
+  } else {
+    timeLeft = await getTimeLeft();
+    chrome.storage.session.set({ timeLeft });
+    chrome.alarms.clearAll();
+    clearInterval(intervalId);
+  }
+  DOMController.updateTogglerText();
+});
 
 document.querySelector('#settings').addEventListener('click', () => {
   chrome.tabs.create({ url: './pages/settings.html' });
@@ -104,111 +67,138 @@ document.querySelector('#settings').addEventListener('click', () => {
 
 document.querySelector('#skip').addEventListener('click', () => {
   chrome.alarms.clearAll();
-  updateSession(status);
+  [status, count, timeLeft] = updateSession({
+    status,
+    count,
+    timeLeft,
+    interval: settings.longBreakInterval,
+  });
 
   if (status === 'pomodoro') {
     chrome.action.setIcon({ path: './images/icon-16.png' });
   } else {
     chrome.action.setIcon({ path: iconBlueUrl });
     if (currentTaskId < tasks.length) {
-      tasks[currentTaskId].pomodoros++;
-      DOMController.updateTaskList(tasks);
+      tasks[currentTaskId].actPomodoros++;
+      DOMController.printTasks(tasks);
       chrome.storage.sync.set({ tasks });
     }
   }
 
   chrome.storage.session.set({ status, count, timeLeft });
   clearInterval(intervalId);
-  DOMController.toggleButtonText('Start');
+  DOMController.updateTogglerText('Start');
   DOMController.updateStatus(status);
   DOMController.updateCounter(count);
   DOMController.updateTheme(status);
   DOMController.updateTimer(parseInt(settings[status]) * 60);
 });
 
-document.querySelector('#toggleTaskMenu').addEventListener('click', (event) => {
-  event.stopPropagation();
-  DOMController.toggleTaskMenu();
-});
+document
+  .querySelector('#taskMenuToggler')
+  .addEventListener('click', (event) => {
+    event.stopPropagation();
+    DOMController.openTaskMenu();
+  });
 
 document.querySelector('.new-task-menu').addEventListener('click', (event) => {
-  console.log(event);
-  if (event.target.id === 'addTask') DOMController.createTaskForm();
-  if (event.target.id === 'taskFormCancel') DOMController.createAddTaskButton();
-  if (event.target.id === 'taskFormSubmit') {
-    const { title, estPomodoros } = DOMController.createTaskItem(tasks.length);
-    tasks.push({ title, estPomodoros, pomodoros: 0, completed: false });
+  if (event.target.id === 'addTask') {
+    const form = document.querySelector('.task-list .form');
+
+    if (form) {
+      DOMController.printTasks(
+        [tasks[form.parentElement.dataset.id]],
+        form.parentElement.dataset.id,
+        form.parentElement,
+      );
+    }
+
+    formControls = DOMController.openTaskForm(event.target.parentElement);
+  }
+  if (event.target.id === 'cancel') DOMController.printAddTaskButton();
+  if (event.target.id === 'submit') {
+    tasks.push({
+      title: formControls.title.value,
+      estPomodoros: parseInt(formControls.estPomodoros.value),
+      actPomodoros: 0,
+      completed: false,
+    });
     chrome.storage.sync.set({ tasks });
+    DOMController.printTasks(tasks.slice(-1), tasks.length - 1);
+    DOMController.printAddTaskButton();
   }
 });
 
-document.querySelector('#taskList').addEventListener('click', (event) => {
+document.querySelector('.task-list').addEventListener('click', (event) => {
   if (event.target.dataset?.type === 'task') {
-    tasks[event.target.id].completed = event.target.checked;
-    while (
-      tasks[currentTaskId]?.completed === true &&
-      currentTaskId < tasks.length
-    ) {
+    tasks[event.target.dataset.id].completed = event.target.checked;
+    while (tasks[currentTaskId]?.completed && currentTaskId < tasks.length) {
       currentTaskId++;
     }
     chrome.storage.sync.set({ tasks, currentTaskId });
-  }
+  } else if (event.target.dataset?.type === 'edit') {
+    const form = document.querySelector('.task-list .form');
 
-  if (event.target.dataset?.type === 'edit') {
-    console.log(event.target.parentElement);
+    if (form) {
+      DOMController.printTasks(
+        [tasks[form.parentElement.dataset.id]],
+        form.parentElement.dataset.id,
+        form.parentElement,
+      );
+    }
+
+    DOMController.printAddTaskButton();
     const parent = event.target.parentElement;
-    const id = event.target.dataset.id;
-    const submitCallback = function () {
-      console.log(event.target.parentElement);
-      const { title, actPomodoros, estPomodoros } =
-        DOMController.updateTaskItem(id, parent);
-      tasks[event.target.dataset.id].title = title;
-      tasks[event.target.dataset.id].pomodoros = actPomodoros;
-      tasks[event.target.dataset.id].estPomodoros = estPomodoros;
-      chrome.storage.sync.set({ tasks });
-    };
+    const index = parseInt(event.target.dataset.id);
+    formControls = DOMController.openTaskForm(parent, tasks[index], index);
 
-    DOMController.createTaskEdit(
-      tasks[event.target.dataset.id],
-      event.target.dataset.id,
-      event.target.parentElement,
-      submitCallback,
-    );
+    document.querySelector('#submit').addEventListener('click', () => {
+      tasks[index].title = formControls.title.value;
+      tasks[index].actPomodoros = parseInt(formControls.actPomodoros.value);
+      tasks[index].estPomodoros = parseInt(formControls.estPomodoros.value);
+      DOMController.printTasks([tasks[index]], index, parent);
+      chrome.storage.sync.set({ tasks });
+    });
+
+    document.querySelector('#cancel').addEventListener('click', () => {
+      DOMController.printTasks([tasks[index]], index, parent);
+    });
   }
 });
 
-document.querySelector('#clearFinishedTasks').addEventListener('click', () => {
+document.querySelector('#clearFinished').addEventListener('click', () => {
   tasks = tasks.filter((task) => !task.completed);
   currentTaskId = 0;
-  DOMController.updateTaskList(tasks);
+  DOMController.printTasks(tasks);
   chrome.storage.sync.set({ tasks, currentTaskId });
 });
 
-document.querySelector('#clearAllTasks').addEventListener('click', () => {
+document.querySelector('#clearAll').addEventListener('click', () => {
   tasks = [];
   currentTaskId = 0;
-  DOMController.updateTaskList(tasks);
+  DOMController.printTasks(tasks);
   chrome.storage.sync.set({ tasks, currentTaskId });
 });
 
 chrome.alarms.onAlarm.addListener((event) => {
-  updateSession(event.name);
+  [status, count, timeLeft] = updateSession({
+    status: event.name,
+    count,
+    timeLeft,
+    interval: settings.longBreakInterval,
+  });
   clearInterval(intervalId);
 
-  if (
-    event.name === 'pomodoro' &&
-    tasks.length &&
-    currentTaskId < tasks.length
-  ) {
-    tasks[currentTaskId].pomodoros++;
-    DOMController.updateTaskList(tasks);
+  if (event.name === 'pomodoro' && currentTaskId < tasks.length) {
+    tasks[currentTaskId].actPomodoros++;
+    DOMController.printTasks(tasks);
   }
 
   if (
     (event.name === 'pomodoro' && !settings.autoStartBreaks) ||
     (event.name !== 'pomodoro' && !settings.autoStartPomodoros)
   ) {
-    DOMController.toggleButtonText('Start');
+    DOMController.updateTogglerText('Start');
   }
 
   DOMController.updateStatus(status);

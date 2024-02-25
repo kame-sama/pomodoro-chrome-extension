@@ -1,5 +1,5 @@
-import getTimeLeft from './modules/get-time-left';
-import formatTime from './modules/format-time';
+import getTimeLeft from './modules/helpers/get-time-left';
+import formatTime from './modules/helpers/format-time';
 
 const modalDialog = document.createElement('dialog');
 const timerDiv = document.createElement('div');

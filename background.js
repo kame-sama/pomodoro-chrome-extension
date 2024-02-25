@@ -24,7 +24,7 @@ chrome.alarms.onAlarm.addListener(async (event) => {
       settings.tasks.length &&
       settings.currentTaskId < settings.tasks.length
     ) {
-      settings.tasks[settings.currentTaskId].pomodoros++;
+      settings.tasks[settings.currentTaskId].actPomodoros++;
       chrome.storage.sync.set({ tasks: settings.tasks });
     }
     status = count % settings.longBreakInterval ? 'shortBreak' : 'longBreak';

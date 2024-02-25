@@ -18,7 +18,7 @@ const displaySettings = function (
   longBreakTime = 15,
   autoStartBreaksEnabled = false,
   autoStartPomodorosEnabled = false,
-  longBreakIntervalCount = 4
+  longBreakIntervalCount = 4,
 ) {
   pomodoro.value = pomodoroTime;
   shortBreak.value = shortBreakTime;
@@ -71,6 +71,7 @@ const updateScripting = async function () {
         id: 'blocker',
         matches: settings.blocker,
         js: [scriptPath],
+        allFrames: true,
       },
     ]);
   }
@@ -83,7 +84,7 @@ if (settings.pomodoro) {
     settings.longBreak,
     settings.autoStartBreaks,
     settings.autoStartPomodoros,
-    settings.longBreakInterval
+    settings.longBreakInterval,
   );
 } else {
   displaySettings();
